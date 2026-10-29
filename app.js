@@ -37,12 +37,13 @@
     html+='</ul></section></div><div class="workflow-heading"><div><div class="eyebrow">STEP-BY-STEP</div><h3>计算流程 <span>Workflow</span></h3></div><div class="step-count">'+t.steps.length+' STEPS</div></div><div class="workflow-steps">';
     t.steps.forEach((s,si)=>{
       html+='<section class="workflow-step"><div class="step-number">'+String(si+1).padStart(2,'0')+'</div><div class="step-content"><h4>'+esc(s.title)+'</h4><div class="step-en">'+esc(s.en)+'</div><p class="step-purpose">'+esc(s.purpose)+'</p>';
-      (s.commands||[]).forEach((c,ci)=>{html+='<div class="command-card"><div class="command-head"><span><b>命令用途</b> '+esc(c.purpose)+'</span><button class="copy-button" data-step="'+si+'" data-cmd="'+ci+'">复制 / COPY</button></div><pre><code>'+esc(c.code)+'</code></pre></div>'});
+      (s.commands||[]).forEach((c,ci)=>{html+='<div class="command-card"><div class="command-head"><span><b>用途</b> '+esc(c.purpose)+'</span><button class="copy-button" data-step="'+si+'" data-cmd="'+ci+'">复制 / COPY</button></div><pre><code>'+esc(c.code)+'</code></pre>'+(c.notes?'<p class="step-purpose">'+esc(c.notes)+'</p>':'')+'</div>'});
       html+='<div class="step-outcomes"><p><b>预期结果 / Output</b>'+esc(s.output)+'</p><p><b>检查点 / Check</b>'+esc(s.check)+'</p></div></div></section>';
     });
     html+='</div>';
     if((t.cautions||[]).length){html+='<section class="cautions"><h3>适用边界与注意事项 <span>CAUTIONS</span></h3><ul>';t.cautions.forEach(x=>html+='<li>'+esc(x)+'</li>');html+='</ul></section>'}
-    html+='<div class="source-credit"><span>资料整理与来源 / SOURCE</span><strong>Zhilong Wang（汪志龙）</strong></div></div>';
+    if(t.reference) html+='<p class="step-purpose">官方参考 / Official reference: <a href="'+esc(t.reference)+'" target="_blank" rel="noopener noreferrer">'+esc(t.reference)+'</a></p>';
+    html+='<div class="source-credit"><span>资料整理 / EDITOR</span><strong>Zhilong Wang（汪志龙）</strong></div></div>';
     detail.innerHTML=html;
     detail.querySelectorAll('.copy-button').forEach(b=>b.addEventListener('click',async()=>{
       const code=t.steps[Number(b.dataset.step)].commands[Number(b.dataset.cmd)].code;
@@ -68,4 +69,3 @@
   document.getElementById('mobile-menu').addEventListener('click',e=>{const open=document.getElementById('sidebar').classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',String(open))});
   renderNav();renderList();
 })();
-
