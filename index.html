@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f6f7f4">
-    <meta name="description" content="计算材料与计算化学的实用工作手册。Computational materials and chemistry workflows, commands, and input recipes.">
+    <meta name="description" content="计算材料与计算化学工作流程手册：从输入准备到计算、检查和结果分析。">
     <title>Computational Manual — 计算工作手册</title>
     <link rel="stylesheet" href="styles.css">
     <script src="manual.js" defer></script>
@@ -17,52 +17,53 @@
         <span><strong>Computational Manual</strong><small>计算材料与计算化学 · 实用手册</small></span>
       </a>
       <div class="top-actions">
-        <span class="edition">FIELD NOTES <span>·</span> 01</span>
+        <span class="edition">FIELD GUIDE <span>·</span> 02</span>
         <button class="mobile-menu" id="mobile-menu" aria-label="打开导航" aria-expanded="false">☰</button>
       </div>
     </header>
 
     <div class="shell" id="home">
       <aside class="sidebar" id="sidebar">
-        <div class="sidebar-heading">WORKBENCH <span>工作台</span></div>
+        <div class="sidebar-heading">WORKBENCH <span>计算工作台</span></div>
         <label class="search-box" for="search">
           <span aria-hidden="true">⌕</span>
-          <input id="search" type="search" placeholder="搜索任务或命令… / Search" autocomplete="off">
+          <input id="search" type="search" placeholder="搜索计算任务… / Search" autocomplete="off">
           <kbd>/</kbd>
         </label>
-        <nav id="software-nav" aria-label="软件与主题"></nav>
-        <div class="sidebar-foot">个人实践笔记 · 持续整理<br>Personal notes · evolving</div>
+        <nav id="software-nav" aria-label="按软件浏览"></nav>
+        <div class="sidebar-foot">每个任务包含输入、步骤、输出与检查点。<br>Each workflow includes inputs, steps, outputs, and checks.</div>
       </aside>
 
       <main class="main-area">
         <section class="welcome" id="welcome">
-          <div class="eyebrow"><span class="eyebrow-dot"></span> A PRACTICAL REFERENCE FOR RESEARCH</div>
-          <h1>把计算流程，<br><em>变成随手可用的工具。</em></h1>
-          <p>从输入文件到结果分析，按“要做什么”查找经过实践的计算材料与计算化学工作流。<br><span>Find a task, check its assumptions, and copy a command or input block.</span></p>
-          <div class="welcome-meta"><span><b id="task-count">—</b> 个操作条目 / recipes</span><span class="meta-divider"></span><span>VASP · Gaussian · ORCA · GROMACS · Linux</span></div>
+          <div class="eyebrow"><span class="eyebrow-dot"></span> A PRACTICAL GUIDE FOR RESEARCH</div>
+          <h1>从研究问题出发，<br><em>一步一步完成计算。</em></h1>
+          <p>这里按具体计算任务组织流程：先准备什么、每一步做什么、运行后检查什么。<br><span>Find a task, follow each step, and verify its outputs before moving on.</span></p>
+          <div class="welcome-meta"><span><b id="task-count">—</b> 个任务流程 / workflows</span><span class="meta-divider"></span><span>VASP · Gaussian · ORCA · GROMACS · Linux</span></div>
         </section>
 
         <section class="content-grid" aria-label="手册内容">
           <div class="task-column">
             <div class="section-head">
-              <div><div class="eyebrow">BROWSE BY TASK</div><h2 id="list-title">常用操作 <span>Quick reference</span></h2></div>
+              <div><div class="eyebrow">BROWSE BY TASK</div><h2 id="list-title">常用任务 <span>Workflows</span></h2></div>
               <span class="result-count" id="result-count"></span>
             </div>
             <div class="task-list" id="task-list"></div>
-            <div class="empty-state" id="empty-state" hidden>没有匹配的条目。试试软件名、计算性质或命令关键词。<br><span>No matching tasks. Try a software or command keyword.</span></div>
+            <div class="empty-state" id="empty-state" hidden>没有匹配的任务。试试软件名、性质或命令关键词。<br><span>No matching workflow. Try a software, property, or command keyword.</span></div>
           </div>
 
           <article class="detail-panel" id="detail-panel" aria-live="polite">
             <div class="detail-placeholder">
               <span class="placeholder-icon">↗</span>
-              <div class="eyebrow">SELECT A WORKFLOW</div>
-              <h2>从左侧开始</h2>
-              <p>选择软件或任务，查看目的、输入示例与执行要点。<br><span>Select a workflow to see its purpose, input, and practical notes.</span></p>
+              <div class="eyebrow">CHOOSE A TASK</div>
+              <h2>选择一项计算任务</h2>
+              <p>任务按输入、分步操作、命令用途、预期输出和检查点组织。<br><span>Each workflow includes inputs, actions, command purposes, outputs, and checks.</span></p>
             </div>
           </article>
         </section>
-        <footer class="page-footer"><span>Computational Manual</span><span>命令执行前请核对软件版本、队列系统与本地计算规范。</span></footer>
+        <footer class="page-footer"><span>Computational Manual</span><span>示例参数和队列命令执行前，请按软件版本与集群规范核对。</span></footer>
       </main>
     </div>
   </body>
 </html>
+

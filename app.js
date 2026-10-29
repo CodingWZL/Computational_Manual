@@ -1,90 +1,71 @@
 (() => {
-  const data = window.MANUAL || [];
-  const nav = document.getElementById('software-nav');
-  const list = document.getElementById('task-list');
-  const detail = document.getElementById('detail-panel');
-  const search = document.getElementById('search');
-  const empty = document.getElementById('empty-state');
-  const resultCount = document.getElementById('result-count');
-  const softwareOrder = ['VASP', 'Gaussian', 'ORCA', 'GROMACS', 'Linux'];
-  const icons = {VASP:'V', Gaussian:'G', ORCA:'O', GROMACS:'M', Linux:'⌘'};
-  let activeSoftware = 'VASP';
-  let selectedId = null;
-  let query = '';
-
-  const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-  const matchesQuery = item => !query || [item.title,item.en,item.summary,item.command,item.software,...item.tags].join(' ').toLowerCase().includes(query);
-  const visibleItems = () => data.filter(item => (query ? true : item.software === activeSoftware) && matchesQuery(item));
-
-  function renderNav() {
-    const counts = Object.fromEntries(softwareOrder.map(name => [name, data.filter(item => item.software === name).length]));
-    nav.innerHTML = `<div class="nav-group"><div class="nav-label">LIBRARY</div><button class="nav-button ${activeSoftware==='*'?'active':''}" data-software="*"><span class="nav-icon">◫</span><span>全部条目 <span style="color:#98a39d">/ All</span></span><span class="nav-count">${data.length}</span></button></div>` +
-      softwareOrder.map((name, index) => `<div class="nav-group"><div class="nav-label">${['FIRST-PRINCIPLES','MOLECULAR QUANTUM','MOLECULAR QUANTUM','CLASSICAL MD','COMPUTING ENVIRONMENT'][index]}</div><button class="nav-button ${activeSoftware===name?'active':''}" data-software="${name}"><span class="nav-icon">${icons[name]}</span><span>${name}</span><span class="nav-count">${counts[name]}</span></button></div>`).join('');
+  const tasks=window.MANUAL||[];
+  const nav=document.getElementById('software-nav'), list=document.getElementById('task-list');
+  const detail=document.getElementById('detail-panel'), search=document.getElementById('search');
+  const empty=document.getElementById('empty-state'), resultCount=document.getElementById('result-count');
+  const order=['VASP','Gaussian','ORCA','GROMACS','Linux'];
+  const icons={VASP:'V',Gaussian:'G',ORCA:'O',GROMACS:'M',Linux:'⌘'};
+  let active='VASP', activeId=null, query='';
+  const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const visible=()=>tasks.filter(t=>(query||active==='*'||t.software===active)&&(!query||JSON.stringify(t).toLowerCase().includes(query)));
+  function renderNav(){
+    const counts={}; order.forEach(n=>counts[n]=tasks.filter(t=>t.software===n).length);
+    let html='<div class="nav-group"><div class="nav-label">MANUAL</div><button class="nav-button '+(active==='*'?'active':'')+'" data-software="*"><span class="nav-icon">◫</span><span>全部任务 <small>All tasks</small></span><span class="nav-count">'+tasks.length+'</span></button></div>';
+    order.forEach(n=>{html+='<div class="nav-group"><button class="nav-button '+(active===n?'active':'')+'" data-software="'+n+'"><span class="nav-icon">'+icons[n]+'</span><span>'+n+'</span><span class="nav-count">'+counts[n]+'</span></button></div>'});
+    nav.innerHTML=html;
   }
-
-  function renderList() {
-    const items = visibleItems();
-    const grouped = new Map();
-    items.forEach(item => { if (!grouped.has(item.group)) grouped.set(item.group, []); grouped.get(item.group).push(item); });
-    list.innerHTML = [...grouped.entries()].map(([group, entries]) => `<div class="list-group"><div class="nav-label">${escapeHTML(group)}</div>${entries.map(item => `<button class="task-card ${selectedId===item.id?'selected':''}" data-id="${escapeHTML(item.id)}"><span class="task-topline"><span class="task-title">${escapeHTML(item.title)}</span><span class="task-arrow">↗</span></span><span class="task-subtitle">${escapeHTML(item.en)}</span><span class="task-tags">${item.tags.slice(0,3).map(tag=>`<span class="tag">${escapeHTML(tag)}</span>`).join('')}</span></button>`).join('')}</div>`).join('');
-    empty.hidden = items.length !== 0;
-    resultCount.textContent = `${items.length} ${items.length===1?'ENTRY':'ENTRIES'}`;
-    document.getElementById('task-count').textContent = data.length;
-    const name = activeSoftware === '*' ? '全部操作' : activeSoftware;
-    document.getElementById('list-title').innerHTML = `${query ? '搜索结果' : escapeHTML(name)} <span>${query ? 'Search results' : 'Quick reference'}</span>`;
-    list.querySelectorAll('.task-card').forEach(button => button.addEventListener('click', () => selectItem(button.dataset.id)));
-  }
-
-  function renderDetail(item) {
-    detail.innerHTML = `<div class="detail-body">
-      <div class="detail-meta"><span class="detail-category">${escapeHTML(item.software)} / ${escapeHTML(item.group)}</span><span class="detail-id">${escapeHTML(item.id.toUpperCase())}</span></div>
-      <h2>${escapeHTML(item.title)}</h2><div class="detail-en-title">${escapeHTML(item.en)}</div>
-      <p class="detail-summary">${escapeHTML(item.summary)}<span class="en">${escapeHTML(item.summaryEn || item.en)}</span></p>
-      ${item.purpose ? `<div class="purpose">${escapeHTML(item.purpose)}</div>` : ''}
-      <div class="block-heading"><span>COMMAND / INPUT</span><button class="copy-button" id="copy-command">复制命令 · COPY</button></div>
-      <div class="code-wrap"><pre><code>${escapeHTML(item.command)}</code></pre></div>
-      <div class="block-heading"><span>NOTES / 执行要点</span></div>
-      <ul class="detail-notes">${item.notes.map(note=>`<li>${escapeHTML(note)}</li>`).join('')}</ul>
-      <div class="source-note"><strong>来源 / Source</strong> · ${escapeHTML(item.source)}<br>命令运行前请按本机版本、许可、调度器与计算约定复核。</div>
-    </div>`;
-    document.getElementById('copy-command').addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText(item.command); showToast('已复制 / Copied'); }
-      catch { showToast('浏览器未开放剪贴板权限 / Clipboard unavailable'); }
+  function renderList(){
+    const rows=visible(), groups=new Map(); rows.forEach(t=>{if(!groups.has(t.group))groups.set(t.group,[]);groups.get(t.group).push(t)});
+    let html='';
+    groups.forEach((items,g)=>{
+      html+='<section class="task-group"><div class="group-heading">'+esc(g)+'</div>';
+      items.forEach(t=>{html+='<button class="task-card '+(activeId===t.id?'selected':'')+'" data-id="'+esc(t.id)+'"><span class="task-title-row"><span class="task-title">'+esc(t.title)+'</span><span class="task-arrow">↗</span></span><span class="task-en">'+esc(t.en)+'</span><span class="task-summary">'+esc(t.summary)+'</span><span class="task-level">'+esc(t.level)+'</span></button>'});
+      html+='</section>';
     });
+    list.innerHTML=html; empty.hidden=rows.length>0; resultCount.textContent=rows.length+' '+(rows.length===1?'TASK':'TASKS');
+    document.getElementById('task-count').textContent=tasks.length;
+    const heading=query?'搜索结果':(active==='*'?'全部任务':active);
+    document.getElementById('list-title').innerHTML=esc(heading)+' <span>'+(query?'Search results':'Step-by-step workflows')+'</span>';
+    list.querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>selectTask(b.dataset.id)));
   }
-
-  function selectItem(id) {
-    const item = data.find(entry => entry.id === id);
-    if (!item) return;
-    selectedId = id;
-    if (!query) activeSoftware = item.software;
-    renderNav(); renderList(); renderDetail(item);
-    document.getElementById('sidebar').classList.remove('open');
+  function renderDetail(t){
+    let html='<div class="detail-body"><div class="detail-top"><span class="detail-category">'+esc(t.software)+' <b>/</b> '+esc(t.group)+'</span><span class="detail-level">'+esc(t.level)+'</span></div>';
+    html+='<h2>'+esc(t.title)+'</h2><div class="detail-en-title">'+esc(t.en)+'</div><p class="detail-summary">'+esc(t.summary)+'<span>'+esc(t.summaryEn)+'</span></p>';
+    html+='<div class="objective"><div class="block-heading">本任务要完成什么 <span>OBJECTIVE</span></div><p>'+esc(t.objective)+'</p></div><div class="overview-grid">';
+    html+='<section class="overview-card"><h3>完成后应得到 <span>EXPECTED RESULT</span></h3><ul><li>'+esc(t.steps[t.steps.length-1].output)+'</li><li>'+esc(t.steps[t.steps.length-1].check)+'</li></ul></section><section class="overview-card"><h3>输入与文件 <span>INPUTS</span></h3><ul>';
+    t.inputs.forEach(x=>html+='<li>'+esc(x)+'</li>');
+    html+='</ul></section></div><div class="workflow-heading"><div><div class="eyebrow">STEP-BY-STEP</div><h3>计算流程 <span>Workflow</span></h3></div><div class="step-count">'+t.steps.length+' STEPS</div></div><div class="workflow-steps">';
+    t.steps.forEach((s,si)=>{
+      html+='<section class="workflow-step"><div class="step-number">'+String(si+1).padStart(2,'0')+'</div><div class="step-content"><h4>'+esc(s.title)+'</h4><div class="step-en">'+esc(s.en)+'</div><p class="step-purpose">'+esc(s.purpose)+'</p>';
+      (s.commands||[]).forEach((c,ci)=>{html+='<div class="command-card"><div class="command-head"><span><b>命令用途</b> '+esc(c.purpose)+'</span><button class="copy-button" data-step="'+si+'" data-cmd="'+ci+'">复制 / COPY</button></div><pre><code>'+esc(c.code)+'</code></pre></div>'});
+      html+='<div class="step-outcomes"><p><b>预期结果 / Output</b>'+esc(s.output)+'</p><p><b>检查点 / Check</b>'+esc(s.check)+'</p></div></div></section>';
+    });
+    html+='</div>';
+    if((t.cautions||[]).length){html+='<section class="cautions"><h3>适用边界与注意事项 <span>CAUTIONS</span></h3><ul>';t.cautions.forEach(x=>html+='<li>'+esc(x)+'</li>');html+='</ul></section>'}
+    html+='<div class="source-credit"><span>资料整理与来源 / SOURCE</span><strong>Zhilong Wang（汪志龙）</strong></div></div>';
+    detail.innerHTML=html;
+    detail.querySelectorAll('.copy-button').forEach(b=>b.addEventListener('click',async()=>{
+      const code=t.steps[Number(b.dataset.step)].commands[Number(b.dataset.cmd)].code;
+      try{await navigator.clipboard.writeText(code);toast('已复制命令 / Command copied')}catch{toast('浏览器未开放剪贴板权限 / Clipboard unavailable')}
+    }));
+  }
+  function selectTask(id){
+    const t=tasks.find(x=>x.id===id);if(!t)return;activeId=id;if(!query)active=t.software;
+    renderNav();renderList();renderDetail(t);document.getElementById('sidebar').classList.remove('open');
     document.getElementById('mobile-menu').setAttribute('aria-expanded','false');
   }
-
   let toastTimer;
-  function showToast(message) {
-    let toast = document.querySelector('.toast');
-    if (!toast) { toast = document.createElement('div'); toast.className = 'toast'; document.body.appendChild(toast); }
-    toast.textContent = message; clearTimeout(toastTimer); toastTimer = setTimeout(()=>toast.remove(), 1800);
-  }
-
-  nav.addEventListener('click', event => {
-    const button = event.target.closest('[data-software]');
-    if (!button) return;
-    activeSoftware = button.dataset.software; query = ''; search.value = ''; selectedId = null;
-    renderNav(); renderList();
-    detail.innerHTML = `<div class="detail-placeholder"><span class="placeholder-icon">↗</span><div class="eyebrow">SELECT A WORKFLOW</div><h2>${activeSoftware==='*'?'选择一项操作':'选择 '+escapeHTML(activeSoftware)+' 操作'}</h2><p>选择条目以查看输入示例与注意事项。<br><span>Select an entry to view the example and practical notes.</span></p></div>`;
+  function toast(message){let n=document.querySelector('.toast');if(!n){n=document.createElement('div');n.className='toast';document.body.appendChild(n)}n.textContent=message;clearTimeout(toastTimer);toastTimer=setTimeout(()=>n.remove(),1800)}
+  nav.addEventListener('click',e=>{
+    const b=e.target.closest('[data-software]');if(!b)return;active=b.dataset.software;query='';search.value='';activeId=null;renderNav();renderList();
+    detail.innerHTML='<div class="detail-placeholder"><span class="placeholder-icon">↗</span><div class="eyebrow">CHOOSE A TASK</div><h2>选择一项计算任务</h2><p>每个任务列出输入文件、分步操作、单条命令用途和检查点。<br><span>Each task lists inputs, ordered actions, command purposes, and checks.</span></p></div>';
   });
-  search.addEventListener('input', () => { query = search.value.trim().toLowerCase(); selectedId = null; renderNav(); renderList(); });
-  document.addEventListener('keydown', event => {
-    if (event.key === '/' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) { event.preventDefault(); search.focus(); }
-    if (event.key === 'Escape' && document.activeElement === search) { search.value=''; query=''; renderList(); search.blur(); }
+  search.addEventListener('input',()=>{query=search.value.trim().toLowerCase();activeId=null;renderNav();renderList()});
+  document.addEventListener('keydown',e=>{
+    if(e.key==='/'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();search.focus()}
+    if(e.key==='Escape'&&document.activeElement===search){search.value='';query='';renderList();search.blur()}
   });
-  document.getElementById('mobile-menu').addEventListener('click', event => {
-    const open = document.getElementById('sidebar').classList.toggle('open');
-    event.currentTarget.setAttribute('aria-expanded', String(open));
-  });
-  renderNav(); renderList();
+  document.getElementById('mobile-menu').addEventListener('click',e=>{const open=document.getElementById('sidebar').classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',String(open))});
+  renderNav();renderList();
 })();
+
