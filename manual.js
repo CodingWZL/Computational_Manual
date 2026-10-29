@@ -215,7 +215,7 @@ window.MANUAL = [
         command('整理绘图数据列','state, E_DFT, ZPE, -T*S, ΔG(U)')],'OER 自由能图、决定步骤和过电位估计。','检查能量基准和图中单位；对修正参数做敏感性分析。')
     ],['原始 O2/H2/H2O 参考能量属于特定案例，不能直接当作通用值。'],'研究流程 / Research'),
 
-  flow('vasp-hse','VASP','进阶方法','VASP：HSE06 能带/DOS','VASP: HSE06 bands and DOS',
+  flow('vasp-hse-properties','VASP','进阶方法','VASP：HSE06 能带/DOS','VASP: HSE06 bands and DOS',
     '按 PBE 结构/SCF、HSE SCF、HSE 性质计算的顺序组织目录，并核实所有性质文件来自 HSE。',
     'Organize PBE structure/SCF, HSE SCF, then HSE properties while ensuring the property files are HSE-derived.',
     '防止复制 PBE-DOS 电荷文件到 HSE-DOS；明确哪些文件是起始猜测、哪些是最终 HSE 基态。',
@@ -431,4 +431,3 @@ window.MANUAL = [
         command('为每个测试归档输入哈希','sha256sum INCAR POSCAR KPOINTS')],'参数敏感性表及输入来源。','完成后再把此页扩写为可运行工作流。')
     ],['本页面是补资料清单，不是 SOC/Meta-GGA 操作教程。'],'待补充 / Incomplete')
 ];
-
