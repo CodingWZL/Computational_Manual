@@ -1,20 +1,20 @@
 # Computational Manual · 计算工作手册
 
-A compact bilingual, task-oriented reference for computational materials science and computational chemistry. The site is buildless: plain HTML, CSS, and JavaScript. Open `index.html` locally, or publish the repository root with GitHub Pages.
+A bilingual, task-centered guide for computational materials science and computational chemistry. Each workflow spells out its goal, prerequisites, input files, ordered steps, command purposes, expected outputs, and checks. The site is buildless: plain HTML, CSS, and JavaScript.
 
 ## Content map
 
-- **VASP** — relaxation/SCF/band/DOS, CI-NEB, AIMD, Bader and charge-density difference, COHP, OER, optics, effective mass, VASPKIT, installation, and method notes.
-- **Gaussian** — job control, checkpoint conversion, cube generation, restart.
-- **ORCA** — a clearly marked starter input; the source folder did not contain ORCA notes.
-- **GROMACS** — Packmol, topology, EM/NVT/NPT/production, common trajectory analysis, and installation.
-- **Linux** — resource checks, queue/process status, files, SSH/transfer, environment, and logs.
+- **VASP** — structural relaxation and SCF, band structure, DOS, HSE, AIMD, CI-NEB, Bader, charge-density difference, OER, optical response, effective mass, COHP, installation, and source gaps for SOC/Meta-GGA.
+- **Gaussian** — checkpoint conversion, density/ESP cubes, restart, and job checks.
+- **ORCA** — a labeled water-molecule starter workflow; no original ORCA notes were present.
+- **GROMACS** — Packmol and topology setup, EM/NVT/NPT/production stages, separate trajectory-analysis workflows, and installation.
+- **Linux** — cluster login, scheduler submission and checks, file transfer, storage, and archiving.
 
-The entries reorganize the documents found alongside this project. They are personal working notes, not universal protocols. Source attribution and caveats are shown in each entry. Several source documents were incomplete; those topics are marked as such rather than filled with guessed parameters.
+Workflow steps are based on the author's source material and carry the standardized credit **Zhilong Wang（汪志龙）**. They are personal working notes, not universal protocols. Examples and version-specific cautions are identified within each workflow. Topics with incomplete source notes remain marked incomplete instead of being filled with guessed parameters.
 
 ## Run locally
 
-Open `index.html` in a modern browser. The Google Fonts import is optional; the page falls back to system fonts when offline. Search works across all entries; the left navigation filters by software; each recipe has a copy button.
+Open `index.html` in a modern browser. No package installation or external font service is required. Search works across all workflows; the left navigation filters by software; each individual command has its own copy button.
 
 ## Publish with GitHub Pages
 
@@ -24,10 +24,11 @@ The included `.github/workflows/pages.yml` builds the repository root as a Pages
 
 If visitors must authenticate, keep the site behind a real identity-aware access layer (for example, Cloudflare Access on a domain/proxy you control), or use an access-controlled hosting option suitable for your account. Do not add a client-side password gate and describe it as private. See [ACCESS.md](ACCESS.md) before choosing a deployment path.
 
-## Add an entry
+## Add or revise a workflow
 
-Add an object to `manual.js`. Use a short Chinese title, an English title, a concise purpose, a copyable command/input block, caveats, tags, and the source document. Keep cluster-specific paths and account names out of examples. If a workflow is a new recommendation rather than a source-derived practice, say so in `source` and include validation notes.
+Add a workflow to `manual.js`. Include the objective, starting files/materials, and ordered steps. Each step should explain what it does; each command should state its purpose; every step should name the expected output and a concrete check before continuing. Keep examples bilingual and use generic paths/accounts. Preserve the standardized source credit in the UI.
 
 ## Scope and licensing
 
 No proprietary software, pseudopotentials, binaries, checkpoints, trajectories, or raw source documents are bundled. Respect the license terms of VASP, Gaussian, ORCA, GROMACS, force-field files, and all other referenced software/data. Add only text and input snippets you are entitled to redistribute.
+
