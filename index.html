@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f7f4">
+    <meta name="description" content="计算材料与计算化学的实用工作手册。Computational materials and chemistry workflows, commands, and input recipes.">
+    <title>Computational Manual — 计算工作手册</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="manual.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="Computational Manual 首页">
+        <span class="brand-mark">CM</span>
+        <span><strong>Computational Manual</strong><small>计算材料与计算化学 · 实用手册</small></span>
+      </a>
+      <div class="top-actions">
+        <span class="edition">FIELD NOTES <span>·</span> 01</span>
+        <button class="mobile-menu" id="mobile-menu" aria-label="打开导航" aria-expanded="false">☰</button>
+      </div>
+    </header>
+
+    <div class="shell" id="home">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-heading">WORKBENCH <span>工作台</span></div>
+        <label class="search-box" for="search">
+          <span aria-hidden="true">⌕</span>
+          <input id="search" type="search" placeholder="搜索任务或命令… / Search" autocomplete="off">
+          <kbd>/</kbd>
+        </label>
+        <nav id="software-nav" aria-label="软件与主题"></nav>
+        <div class="sidebar-foot">个人实践笔记 · 持续整理<br>Personal notes · evolving</div>
+      </aside>
+
+      <main class="main-area">
+        <section class="welcome" id="welcome">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> A PRACTICAL REFERENCE FOR RESEARCH</div>
+          <h1>把计算流程，<br><em>变成随手可用的工具。</em></h1>
+          <p>从输入文件到结果分析，按“要做什么”查找经过实践的计算材料与计算化学工作流。<br><span>Find a task, check its assumptions, and copy a command or input block.</span></p>
+          <div class="welcome-meta"><span><b id="task-count">—</b> 个操作条目 / recipes</span><span class="meta-divider"></span><span>VASP · Gaussian · ORCA · GROMACS · Linux</span></div>
+        </section>
+
+        <section class="content-grid" aria-label="手册内容">
+          <div class="task-column">
+            <div class="section-head">
+              <div><div class="eyebrow">BROWSE BY TASK</div><h2 id="list-title">常用操作 <span>Quick reference</span></h2></div>
+              <span class="result-count" id="result-count"></span>
+            </div>
+            <div class="task-list" id="task-list"></div>
+            <div class="empty-state" id="empty-state" hidden>没有匹配的条目。试试软件名、计算性质或命令关键词。<br><span>No matching tasks. Try a software or command keyword.</span></div>
+          </div>
+
+          <article class="detail-panel" id="detail-panel" aria-live="polite">
+            <div class="detail-placeholder">
+              <span class="placeholder-icon">↗</span>
+              <div class="eyebrow">SELECT A WORKFLOW</div>
+              <h2>从左侧开始</h2>
+              <p>选择软件或任务，查看目的、输入示例与执行要点。<br><span>Select a workflow to see its purpose, input, and practical notes.</span></p>
+            </div>
+          </article>
+        </section>
+        <footer class="page-footer"><span>Computational Manual</span><span>命令执行前请核对软件版本、队列系统与本地计算规范。</span></footer>
+      </main>
+    </div>
+  </body>
+</html>
